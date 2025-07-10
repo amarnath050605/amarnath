@@ -9,18 +9,19 @@
     <style>
         body{
              font-family: Arial,sans-serif;
-             background-color: #f2f2f2;
+             background: linear-gradient(to right, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
         }
         .login{
-            align:center;
+
+            align-items: center;
             margin-left:100px;
             margin-top: 100px;
-            width: 300px;
-            margin-left: 500px;
+            width: 400px;
+            margin-left: 600px;
             padding: 20px;
             padding-left: 10px;
-            background-color: #e6dddd;
-            border: 2px solid#0da5dc;
+            background-color: #a6b3f4;
+            border: 2px solid#f3f7f9;
             border-radius: 10px;
             box-shadow: 0 0 1 0 px rgba(0,0,0,0,1);
 
@@ -47,7 +48,7 @@
         .login input[type="submit"]{
             width: 104%;
             height: 40px;
-            background-color: #4c3ab3;
+            background-color: #3c21da;
             color: #fff;
             padding: 10px;
             border: 2px solid#080315;
@@ -68,18 +69,100 @@
         #text{
              text-decoration: none;
         }
+        .errormsg{
+            color: red;
+            font-size: 15px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+        .errormsg:empty {
+            display: none;
+        }
     </style>
     <div class="login">
         <h2>login page</h2><hr>
-    <form action="loginsuccess.html">
+    <form id="loginform">
        <label for="username">username</label>
-       <input type="text" id="username" autofocus required name="username" placeholder="username or email"><br><br>
+       <input type="text" id="username" autofocus required name="username" placeholder="username or email">
+       <div id="emailerror" class="errormsg"></div>
+       <br>
        <label for="password">Password</label>
        <input type="password" id="password" name="password" required placeholder="enter your password" minlength="8">
+       <div id="passworderror" class="errormsg"></div>
+       <br>
+       <label for="confirmpassword">Confirm Password</label>
+       <input type="password" id="confirmpassword" name="confirmpassword" required placeholder="confirm your password" minlength="8">
+       <div id="confirmpassworderror" class="errormsg"></div>
        <input type="submit" value="login">
        <label for="" id="pass">forget password?</label>
        <label id="sign" for="">Don't have an account <a href="" id="text">signup</a></label>
     </form>
     </div>
+
+    <script>
+        const emailInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const confirmpasswordInput = document.getElementById("confirmpassword");
+
+        emailInput.addEventListener("input", validateEmail);
+        passwordInput.addEventListener("input", validatePassword);
+        confirmpasswordInput.addEventListener("input", validateConfirmPassword);
+
+        function validateEmail() {
+            const emailerror = document.getElementById("emailerror");
+            const value = emailInput.value.trim();
+
+            if (!value) {
+                emailerror.textContent = "Email is required.";
+            }
+            else if (!value.includes("@") || !value.includes(".")) {
+                emailerror.textContent = "Please enter a valid email address.";
+            } else {
+                emailerror.textContent = "";
+            }
+        }
+
+        function validatePassword() {
+            const passworderror = document.getElementById("passworderror");
+            const value = passwordInput.value.trim();
+            if (!value) {
+                passworderror.textContent = "Password is required.";
+            } else if (value.length < 8) {
+                passworderror.textContent = "Password must be at least 8 characters long.";
+            } else {
+                passworderror.textContent = "";
+            }
+        }
+
+        function validateConfirmPassword() {
+            const confirmerror = document.getElementById("confirmpassworderror");
+            const pass = passwordInput.value.trim();
+            const confirm = confirmpasswordInput.value.trim();
+
+            if (!confirm) {
+                confirmerror.textContent = "Confirm password is required.";
+            } else if (confirm !== pass) {
+                confirmerror.textContent = "Passwords do not match.";
+            } else {
+                confirmerror.textContent = "";
+            }
+        }
+
+        document.getElementById("loginform").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            validateEmail();
+            validatePassword();
+            validateConfirmPassword();
+
+            const emailErr = document.getElementById("emailerror").textContent;
+            const passwordErr = document.getElementById("passworderror").textContent;
+            const confirmErr = document.getElementById("confirmpassworderror").textContent;
+
+            if (!emailErr && !passwordErr && !confirmErr) {
+                alert("Form submitted successfully!");
+            }
+        });
+    </script>
 </body>
 </html>
